@@ -27,14 +27,47 @@ module.exports = app => {
   // Delete all Tutorials
   router.delete("/basiccodes/", controller.deleteAll);
 
-  // -------------------------------------------red--------------------------------
-  //deploymentplaces red insertNodes2db
+  // -------------------------------------------红军red--------------------------------
+  //deploymentplaces red 
   router.post("/deploymentplacesred/insertNodes2db", controller.insertNodes2db_red);
-
+  router.get("/deploymentplacesred", controller.findAllCode_red);
+  router.get("/deploymentplacesred/findone", controller.findOne_red);
+  router.delete("/deploymentplacesred/deleteall", controller.deleteAll_red);
+  router.delete("/deploymentplacesred/delete_red/:taskid", controller.delete_red);
   
-  // -------------------------------------------blue--------------------------------
-   // deploymentplaces blue findByCode 
+  // -------------------------------------------蓝军 blue--------------------------------
+  // deploymentplaces blue  
    router.post("/deploymentplacesblue/insertNodes2db", controller.insertNodes2db_blue);
+   router.get("/deploymentplacesblue/", controller.findAllCode_blue);
+   router.delete("/deploymentplacesblue/deleteall", controller.deleteAll_blue);
+   router.get("/deploymentplacesblue/findone", controller.findOne_blue);
+   router.delete("/deploymentplacesblue/delete_blue/:taskid", controller.delete_blue);
+  // -------------------------------------------演习任务 drilltask----------------------
+  // Create a new drilltask
+  router.post("/drilltask/", controller.create_drilltask);
+
+  // Retrieve all drilltask
+  router.get("/drilltask/", controller.findAll_drilltask);
+
+  // Retrieve a single drilltask record with id
+  router.get("/drilltask/:taskid", controller.findOne_drilltask);
+
+
+
+
+  // Update a drilltask with id
+  // router.put("/drilltask/:id", controller.update_drilltask);
+
+  // Delete a drilltask with id
+  // router.delete("/drilltask/:id", controller.delete_drilltask);
+
+  // Delete all drilltask
+  // router.delete("/drilltask/", controller.deleteAll_drilltask);
+
+  // -------------------------------------------deploymentplaces------------------------
+  // deploymentplaces
+  router.post("/deploymentplaces/insertNodes2db", controller.insertNodes2db_deploymentplaces);
+
 
   app.use('/api', router);
 };

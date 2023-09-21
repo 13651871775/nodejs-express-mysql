@@ -64,9 +64,7 @@ Basiccode.getAllCode = (code, result) => {
       result(null, err);
       return;
     }
-
     console.log("basic_code: ", res[0]);
-
     const objectTree = buildObjectTree(code, res);
     const jsonObject = JSON.stringify(objectTree, null, 2);
     console.log(jsonObject);
@@ -94,16 +92,21 @@ function buildObjectTree(parentCode, basicCodes) {
 
   childCodes.forEach((childCode) => {
     objectTree[childCode.code] = {
+      id: childCode.id,
       name: childCode.name,
       code: childCode.code,
       internal_code: childCode.internal_code,
+      areacode: childCode.areacode,
+      extend_name: childCode.extend_name,
+      lang: childCode.lang,
+      lat: childCode.lat,
+      history: childCode.history,
       children: buildObjectTree(childCode.code, basicCodes),
     };
   });
 
   return objectTree;
 }
-
 
 Basiccode.getAllInteralCode = (internal_code,result) => {
   let query = "SELECT * FROM basic_code";

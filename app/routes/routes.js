@@ -64,10 +64,27 @@ module.exports = app => {
   // Delete all drilltask
   // router.delete("/drilltask/", controller.deleteAll_drilltask);
 
+
+
+
   // -------------------------------------------deploymentplaces------------------------
   // deploymentplaces
   router.post("/deploymentplaces/insertNodes2db", controller.insertNodes2db_deploymentplaces);
 
+  // ------------------------------------------部署 bushu---------------------------
+  // Create a new bushu
+  // router.post("/bushu/", controller.create_bushu);
+
+  // bushu
+  router.get("/bushu/findAllCode_bushu", controller.findAllCode_bushu);
+  router.get("/bushu/get_bushu_history", controller.get_bushu_history);
+  router.get("/bushu/get_bushu_detail", controller.get_bushu_detail);
+  // Create a new bushu detail
+  router.post("/bushu/post_bushu_detail", controller.insertNodes2db_bushudetail);
+  // 创建一个新的bushu history
+  router.post("/bushu/post_bushu_history", controller.insertNodes2db_bushuhistory);
+  // 删除bushu history
+  router.delete("/bushu/delete_bushu/:bushuid", controller.delete_bushu);
 
   app.use('/api', router);
 };

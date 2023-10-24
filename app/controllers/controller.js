@@ -5,6 +5,9 @@ const Deploymentplaces_blue = require("../models/deploymentplaces-blue.model.js"
 const Deploymentplaces_red = require("../models/deploymentplaces-red.model.js");
 const Deploymentplaces = require("../models/deploymentplaces.model.js");
 const Drilltask = require("../models/drilltask.model.js");
+const Bushu = require("../models/bushu.model.js");
+const Bushudetail = require("../models/bushudetail.model.js");
+const Bushuhistory = require("../models/bushuhistory.model.js");
 
 // ---------------------------------基本信息表 basic code--------------------------------------
 // Create and Save a new basic_code record in db
@@ -164,11 +167,13 @@ exports.deleteAll = (req, res) => {
 
 function countNodes(node) {
   let count = 1;
-  if (node === null) return 0;
+  if (node == null) return 0;
+  console.log("node: -> ", node)
   testnode = Object.values(node)[0]
-  if (testnode === null ) return 0;
-  if (testnode.children === null) return count;
+  if (testnode == null ) return 0;
+  if (testnode.children == null) return count;
   // length = Object.values(node).length
+  console.log("testnode.children: ", testnode)
   for (const child of Object.values(testnode.children)) {
     let temp = {}
     temp[child.code] = child
@@ -201,7 +206,7 @@ exports.insertNodes2db = (req, res) => {
   });
 }
 
-// ------------------------------演示任务表 drill task-------------------------------------
+// ------------------------------演习任务表 drill task-------------------------------------
 // Create and Save a new drilltask
 exports.create_drilltask = (req, res) => {
   // Validate request
@@ -987,4 +992,127 @@ exports.deleteAll_deploymentplaces = (req, res) => {
       });
     else res.send({ message: `All basic code records were deleted successfully!` });
   });
+};
+
+// ---------------------------------------------Bushu 部署表----------------------------------
+// Retrieve Bushu table record from the database (with condition).
+exports.findAllCode_bushu = (req, res) => {
+  const code = req.query.CODE;
+
+  Bushu.getAllCode(code, (err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving bushu table."
+      });
+    else res.send(data);
+  });
+};
+
+exports.get_bushu_history = (req, res) => {
+  const bushuname = req.query.bushuname;
+  Bushuhistory.getAllHistory(bushuname,(err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred! while retrieving bushu history."
+      });
+    else res.send(data);
+  });
+};
+
+exports.get_bushu_detail = (req, res) => {
+  const bushuid = req.query.bushuid;
+  Bushudetail.getDetail(bushuid,(err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred! while retrieving bushu detail."
+      });
+    else res.send(data);
+  });
+};
+
+// Create and Save a new bushu Detail 创建一个新的bushu detail
+exports.insertNodes2db_bushudetail = (req, res) => {
+  const node = req.body;
+  
+  global.totlength  = countNodes(node);
+  console.log("controller insertNodes2db_bushudetail() global.totlength:-> ", global.totlength, "\nnode:-> ", node);
+  totlength = global.totlength
+  
+  Bushudetail.insertNodes2db(node,(err, data) => {
+    if (err)
+      console.log("controller insertNodes2db_bushudetail() err:-> ", err);
+      // res.status(500).send({
+      //   message:
+      //     err.message || "Some error occurred! while retrieving bushu detail."
+      // });
+    else {
+      console.log("controller insertNodes2db_bushudetail() data:-> ", data);
+      // res.send(data);
+    }
+  })
+  .then((data) => {
+    console.log("controller insertNodes2db_bushudetail().then() data:-> ", data);
+    res.send(data);
+  })
+  .catch((err) => {
+    console.log("controller insertNodes2db_bushudetail() err:-> ", err);
+    res.status(500).send({
+      message:
+        err.message || "Some error occurred while inserting bushu_detail nodes."
+    });
+  })
+};
+
+// Create and Save a new bushu history 创建一个新的bushu history
+exports.insertNodes2db_bushuhistory = (req, res) => {
+  const node = req.body;
+
+  global.totlength  = countNodes(node);
+  console.log("controller insertNodes2db_bushuhistory() global.totlength:-> ", global.totlength, "\n待插入bushu history node:-> ", node);
+  totlength = global.totlength
+  
+  Bushuhistory.insertNodes2db(node,(err, data) => {
+    if (err)
+    {      
+      console.log("controller insertNodes2db_bushuhistory() err:-> ", err);
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred! while retrieving bushu history."
+      })
+    }
+    else {
+      console.log("controller insertNodes2db_bushuhistory() data:-> ", data);
+      res.send(data);
+    }
+  })
+  // .then((data) => {
+  //   res.send(data);
+  // })
+  // .catch((err) => {
+  //   res.status(500).send({
+  //     message:
+  //       err.message || "Some error occurred while inserting insertNodes2db_bushuhistory nodes."
+  //   });
+  // })
+}
+
+exports.delete_bushu = (req, res) => {
+  console.log("delete_bushu() req.params.bushuid: -> ", req.params.bushuid)
+  Bushudetail.remove(req.params.bushuid, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        // res.status(404).send({
+        res.status(200).send({
+          message: `Not found bushudetail record with bushuid ${req.params.bushuid}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Could not delete bushudetail record with bushuid " + req.params.bushuid
+        });
+      }
+    } else res.send({ message: `bushudetail was deleted successfully!` });
+  })
 };

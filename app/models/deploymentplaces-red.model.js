@@ -408,7 +408,6 @@ Deploymentplaces_red.insertNodes2db = async (node,result ) => {
         const createresult = await Deploymentplaces_red.create(childNode, nodeCount);
         results.push(createresult)
 
-
         if (childNode.children) {
           const insertResult = await Deploymentplaces_red.insertNodes2db(childNode.children);
           // result(null, createresult)
